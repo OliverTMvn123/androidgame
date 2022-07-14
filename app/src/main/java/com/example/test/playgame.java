@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +22,7 @@ public class playgame extends AppCompatActivity implements View.OnTouchListener 
     private static final String DEBUGTAG = "JWP";
     private ImageView player;
     private Animation anim_Shoot;
-
+    CountDownTimer Timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,37 +43,46 @@ public class playgame extends AppCompatActivity implements View.OnTouchListener 
         LinearLayout layout = (LinearLayout)findViewById(R.id.layoutAttack);
         layout.setOnTouchListener(new View.OnTouchListener() {
             float pointX=0,pointY=0;
+
             public boolean onTouch(View view, MotionEvent event) {
                 pointX = event.getX();
                 pointY = event.getY();
                 String mess = String.format("Coordinates: (%.2f,%.2f)", pointX, pointY);
                 Log.d(playgame.DEBUGTAG, mess);
-                player.setX(pointX-100);
-                player.setY(pointY+100);
-                String mess1 = String.format("location: (%.2f,%.2f)", pointX-100, pointY+100);
-                Log.d(playgame.DEBUGTAG, mess1);
+                float tam1=(float)355.95,tam2=(float)702.03;
+                float a=-(tam2-pointY)/(-tam1+pointX);
+                float b=tam2-tam1*a;
+                String c="y="+a+"x+"+b;
+                Timer= new CountDownTimer(2000,100) {
+                    @Override
+                    public void onTick(long l) {
+                        player.setX(player.getX()+35);
+                        player.setY(a*player.getX()+b);
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                };
+                Timer.start();
+                /*player.setX(pointX-300);
+                player.setY(pointY-250);*/
+
                 return false;
             }
         });
     }
+
+    private void createVecter(float pointX, float pointY, int i, int i1) {
+        float a=(i1-pointY)%(i+pointX);
+        float b=i1-i*a;
+    }
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         return false;
     }
-
-
-
-    /*public void ondraw(float a, float b) {
-        Canvas canvas = new Canvas();
-        paint.setColor(Color.RED);
-        paint.setStrokeWidth(20f);
-        float startX= (float)192.95;
-        float startY= (float) 745.05;
-        canvas.drawLine(startX,startY,a,b,paint);
-            Log.d(playgame.DEBUGTAG,"hello");
-
-
-    }*/
 
 }
